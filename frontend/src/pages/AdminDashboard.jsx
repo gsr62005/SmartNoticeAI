@@ -1,7 +1,24 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowRight, FaBullhorn, FaChevronDown, FaChevronUp, FaCircle, FaExclamationTriangle, FaGlobe, FaHandPaper, FaHourglassHalf, FaInbox, FaPlus, FaRobot, FaSignOutAlt, FaSyncAlt, FaThLarge } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaBullhorn,
+  FaChevronDown,
+  FaChevronUp,
+  FaCircle,
+  FaExclamationTriangle,
+  FaGlobe,
+  FaHandPaper,
+  FaHourglassHalf,
+  FaInbox,
+  FaPlus,
+  FaRobot,
+  FaSignOutAlt,
+  FaSyncAlt,
+  FaThLarge
+} from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -36,7 +53,7 @@ function AdminDashboard() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/notices"
+        `${API_BASE_URL}/api/notices`
       );
 
       if (!response.ok) {
@@ -67,7 +84,7 @@ function AdminDashboard() {
     try {
       if (token) {
         const response = await fetch(
-          "http://localhost:5000/api/admin/logout",
+          `${API_BASE_URL}/api/admin/logout`,
           {
             method: "POST",
             headers: {
@@ -288,7 +305,9 @@ function AdminDashboard() {
               disabled={refreshing}
               className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-xl font-semibold hover:bg-slate-50 transition disabled:opacity-50"
             >
-              <span>{refreshing ? <FaHourglassHalf /> : <FaSyncAlt />}</span>
+              <span>
+                {refreshing ? <FaHourglassHalf /> : <FaSyncAlt />}
+              </span>
 
               {refreshing ? "Refreshing..." : "Refresh"}
             </button>
@@ -394,7 +413,9 @@ function AdminDashboard() {
                         </p>
 
                         <p className="text-sm font-semibold text-emerald-600 mt-1">
-                          <span className="inline-flex items-center gap-2"><FaCircle className="text-[8px]" /> Logged In</span>
+                          <span className="inline-flex items-center gap-2">
+                            <FaCircle className="text-[8px]" /> Logged In
+                          </span>
                         </p>
                       </div>
 
@@ -409,7 +430,9 @@ function AdminDashboard() {
                           }}
                           className="w-full bg-red-50 text-red-600 hover:bg-red-100 rounded-xl py-3 font-semibold transition"
                         >
-                          <span className="inline-flex items-center gap-2"><FaSignOutAlt /> Logout</span>
+                          <span className="inline-flex items-center gap-2">
+                            <FaSignOutAlt /> Logout
+                          </span>
                         </button>
 
                       </div>
@@ -442,7 +465,9 @@ function AdminDashboard() {
             </p>
 
             <h2 className="text-2xl md:text-3xl font-extrabold text-white">
-              <span className="inline-flex items-center gap-2">Welcome back, {adminName}! <FaHandPaper className="text-amber-300" /></span>
+              <span className="inline-flex items-center gap-2">
+                Welcome back, {adminName}! <FaHandPaper className="text-amber-300" />
+              </span>
             </h2>
 
             <p className="text-blue-100 mt-3 leading-relaxed">
@@ -558,7 +583,9 @@ function AdminDashboard() {
               to="/admin/notices"
               className="text-sm font-bold text-blue-600 hover:text-blue-800"
             >
-              <span className="inline-flex items-center gap-2">View All <FaArrowRight /></span>
+              <span className="inline-flex items-center gap-2">
+                View All <FaArrowRight />
+              </span>
             </Link>
 
           </div>

@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaBell, FaRobot } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -39,8 +40,15 @@ function Navbar() {
 
     const fetchUnreadCount = async () => {
       try {
+        const token = sessionStorage.getItem("studentToken");
+
         const response = await fetch(
-          "http://localhost:5000/api/notifications"
+          `${API_BASE_URL}/api/notifications`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const data = await response.json();
@@ -78,23 +86,20 @@ function Navbar() {
   return (
     <nav className="bg-white shadow-md px-8 py-4">
       <div className="flex items-center justify-between">
-
         <Link to="/" className="text-2xl font-bold text-blue-600">
-          <span className="inline-flex items-center gap-2"><FaRobot /> SmartNotice AI</span>
+          <span className="inline-flex items-center gap-2">
+            <FaRobot /> SmartNotice AI
+          </span>
         </Link>
 
         <div className="flex gap-6 items-center">
-
           <Link to="/" className="text-gray-700 hover:text-blue-600">
             Home
           </Link>
 
           {isLoggedIn ? (
             <>
-              <Link
-                to="/dashboard"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">
                 Dashboard
               </Link>
 
@@ -111,10 +116,7 @@ function Navbar() {
                 )}
               </Link>
 
-              <Link
-                to="/settings"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/settings" className="text-gray-700 hover:text-blue-600">
                 Settings
               </Link>
 
@@ -127,22 +129,15 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/login" className="text-gray-700 hover:text-blue-600">
                 Login
               </Link>
 
-              <Link
-                to="/register"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/register" className="text-gray-700 hover:text-blue-600">
                 Register
               </Link>
             </>
           )}
-
         </div>
       </div>
     </nav>

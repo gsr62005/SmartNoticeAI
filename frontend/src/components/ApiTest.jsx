@@ -1,11 +1,18 @@
+
 import { useEffect, useState } from "react";
+import API_BASE_URL from "../api";
 
 function ApiTest() {
   const [notices, setNotices] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/notices")
-      .then((response) => response.json())
+    fetch(`${API_BASE_URL}/api/notices`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch notices");
+        }
+        return response.json();
+      })
       .then((data) => {
         setNotices(data);
       })

@@ -1,17 +1,27 @@
 
 import { useEffect, useState } from "react";
 import { FaBell, FaCheck } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function NotificationPanel() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch notifications from MongoDB
+  const getAuthHeaders = () => ({
+    Authorization: `Bearer ${sessionStorage.getItem("studentToken") || ""}`,
+  });
+
+  // Fetch notifications
   const fetchNotifications = async () => {
     try {
+      setError("");
+
       const response = await fetch(
-        "http://localhost:5000/api/notifications"
+        `${API_BASE_URL}/api/notifications`,
+        {
+          headers: getAuthHeaders(),
+        }
       );
 
       if (!response.ok) {
@@ -19,6 +29,11 @@ function NotificationPanel() {
       }
 
       const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid notifications response");
+      }
+
       setNotifications(data);
     } catch (err) {
       console.error("Notification Error:", err);
@@ -36,8 +51,11 @@ function NotificationPanel() {
   const handleRead = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notifications/${id}/read`,
-        { method: "PATCH" }
+        `${API_BASE_URL}/api/notifications/${id}/read`,
+        {
+          method: "PATCH",
+          headers: getAuthHeaders(),
+        }
       );
 
       if (!response.ok) {
@@ -61,8 +79,11 @@ function NotificationPanel() {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notifications/${id}`,
-        { method: "DELETE" }
+        `${API_BASE_URL}/api/notifications/${id}`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(),
+        }
       );
 
       if (!response.ok) {
@@ -93,9 +114,10 @@ function NotificationPanel() {
   return (
     <section className="bg-gray-100 min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
-
         <h1 className="text-3xl font-bold text-gray-900">
-          <span className="inline-flex items-center gap-2"><FaBell className="text-blue-600" /> Notifications</span>
+          <span className="inline-flex items-center gap-2">
+            <FaBell className="text-blue-600" /> Notifications
+          </span>
         </h1>
 
         <p className="text-gray-500 mt-2">
@@ -111,20 +133,15 @@ function NotificationPanel() {
         )}
 
         <div className="mt-8 space-y-4">
-
           {notifications.length > 0 ? (
             notifications.map((notification) => (
-
               <div
                 key={notification._id}
                 className={`p-5 rounded-2xl shadow-sm hover:shadow-md transition ${
-                  notification.isRead
-                    ? "bg-gray-50"
-                    : "bg-white"
+                  notification.isRead ? "bg-gray-50" : "bg-white"
                 }`}
               >
                 <div className="flex justify-between items-start gap-4">
-
                   <div>
                     <h2 className="font-bold text-gray-800 text-lg">
                       {notification.title}
@@ -135,14 +152,14 @@ function NotificationPanel() {
                     </p>
 
                     <p className="text-gray-400 text-sm mt-3">
-                      {new Date(
-                        notification.createdAt
-                      ).toLocaleString("en-IN")}
+                      {new Date(notification.createdAt).toLocaleString("en-IN")}
                     </p>
 
                     {notification.isRead && (
                       <p className="text-green-600 text-sm mt-2 font-medium">
-                        <span className="inline-flex items-center gap-2"><FaCheck /> Read</span>
+                        <span className="inline-flex items-center gap-2">
+                          <FaCheck /> Read
+                        </span>
                       </p>
                     )}
 
@@ -174,14 +191,14 @@ function NotificationPanel() {
                   >
                     {notification.type}
                   </span>
-
                 </div>
               </div>
-
             ))
           ) : (
             <div className="bg-white p-10 rounded-2xl text-center">
-              <div className="text-5xl text-blue-600 flex justify-center"><FaBell /></div>
+              <div className="text-5xl text-blue-600 flex justify-center">
+                <FaBell />
+              </div>
 
               <h2 className="text-xl font-bold mt-4">
                 No Notifications
@@ -192,7 +209,6 @@ function NotificationPanel() {
               </p>
             </div>
           )}
-
         </div>
       </div>
     </section>
