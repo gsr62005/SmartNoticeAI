@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function ManageNotices() {
   const navigate = useNavigate();
@@ -20,7 +21,10 @@ function ManageNotices() {
 
   const fetchNotices = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/notices");
+      const response = await fetch(
+        `${API_BASE_URL}/api/notices`
+      );
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -65,13 +69,13 @@ function ManageNotices() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notices/${editingId}`,
+        `${API_BASE_URL}/api/notices/${editingId}`,
         {
           method: "PUT",
           headers: {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
-},
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
+          },
           body: JSON.stringify(formData),
         }
       );
@@ -107,12 +111,12 @@ function ManageNotices() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notices/${id}`,
+        `${API_BASE_URL}/api/notices/${id}`,
         {
           method: "DELETE",
           headers: {
-  Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
-},
+            Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
+          },
         }
       );
 
@@ -131,12 +135,14 @@ function ManageNotices() {
 
   const cancelEdit = () => {
     setEditingId(null);
+
     setFormData({
       title: "",
       category: "",
       priority: "LOW",
       summary: "",
     });
+
     setMessage("");
   };
 
@@ -148,13 +154,16 @@ function ManageNotices() {
           onClick={() => navigate("/admin")}
           className="text-blue-600 font-semibold mb-6"
         >
-          <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Admin Dashboard</span>
+          <span className="inline-flex items-center gap-2">
+            <FaArrowLeft /> Back to Admin Dashboard
+          </span>
         </button>
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
             Manage Notices
           </h1>
+
           <p className="text-gray-500 mt-2">
             View, edit and delete published notices.
           </p>
