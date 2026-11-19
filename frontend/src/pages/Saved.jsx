@@ -1,7 +1,13 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaBookmark, FaTrashAlt } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaBookmark,
+  FaTrashAlt,
+} from "react-icons/fa";
+
+import API_BASE_URL from "../api";
 
 function Saved() {
   const [savedNotices, setSavedNotices] = useState([]);
@@ -12,17 +18,29 @@ function Saved() {
   // Fetch saved notices from MongoDB
   const fetchSavedNotices = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/saved"
-      );
+      setError("");
 
-      if (!response.ok) {
-        throw new Error("Unable to fetch saved notices");
-      }
+      const token = sessionStorage.getItem("studentToken");
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/saved`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
-      setSavedNotices(data);
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Unable to fetch saved notices"
+        );
+      }
+
+      setSavedNotices(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Saved Notices Error:", err);
       setError("Unable to load saved notices.");
@@ -39,25 +57,34 @@ function Saved() {
   const handleRemove = async (noticeId) => {
     try {
       setRemovingId(noticeId);
+      setError("");
+
+      const token = sessionStorage.getItem("studentToken");
 
       const response = await fetch(
-        `http://localhost:5000/api/saved/${noticeId}`,
+        `${API_BASE_URL}/api/saved/${noticeId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to remove notice");
+        throw new Error(
+          data.message || "Failed to remove notice"
+        );
       }
 
       // Update UI without refreshing
       setSavedNotices((prev) =>
         prev.filter(
           (item) =>
-            String(item.noticeId?._id) !== String(noticeId)
+            String(item.noticeId?._id || item.noticeId) !==
+            String(noticeId)
         )
       );
 
@@ -87,7 +114,10 @@ function Saved() {
 
         {/* Heading */}
         <h1 className="text-3xl font-bold text-gray-900">
-          <span className="inline-flex items-center gap-2"><FaBookmark className="text-blue-600" /> Saved Notices</span>
+          <span className="inline-flex items-center gap-2">
+            <FaBookmark className="text-blue-600" />
+            Saved Notices
+          </span>
         </h1>
 
         <p className="text-gray-500 mt-2">
@@ -109,7 +139,9 @@ function Saved() {
             {savedNotices.map((item) => {
               const notice = item.noticeId;
 
-              if (!notice) return null;
+              if (!notice || typeof notice !== "object") {
+                return null;
+              }
 
               return (
                 <div
@@ -155,7 +187,9 @@ function Saved() {
                       to={`/notice/${notice._id}`}
                       className="text-blue-600 font-medium hover:underline"
                     >
-                      <span className="inline-flex items-center gap-2">View Notice <FaArrowRight /></span>
+                      <span className="inline-flex items-center gap-2">
+                        View Notice <FaArrowRight />
+                      </span>
                     </Link>
 
                     <button
@@ -165,7 +199,11 @@ function Saved() {
                     >
                       {removingId === notice._id
                         ? "Removing..."
-                        : <span className="inline-flex items-center gap-2"><FaTrashAlt /> Remove</span>}
+                        : (
+                          <span className="inline-flex items-center gap-2">
+                            <FaTrashAlt /> Remove
+                          </span>
+                        )}
                     </button>
 
                   </div>
