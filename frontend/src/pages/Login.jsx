@@ -1,7 +1,16 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaGraduationCap, FaHandPaper, FaRobot, FaUserShield } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaGraduationCap,
+  FaHandPaper,
+  FaRobot,
+  FaUserShield,
+} from "react-icons/fa";
+
+import API_BASE_URL from "../api";
 
 function Login() {
   const navigate = useNavigate();
@@ -29,7 +38,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        `${API_BASE_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -75,7 +84,9 @@ function Login() {
           </div>
 
           <h1 className="text-3xl font-extrabold text-slate-800">
-            <span className="inline-flex items-center gap-2">Welcome Back <FaHandPaper className="text-amber-500" /></span>
+            <span className="inline-flex items-center gap-2">
+              Welcome Back <FaHandPaper className="text-amber-500" />
+            </span>
           </h1>
 
           <p className="text-slate-500 mt-2">
@@ -92,10 +103,14 @@ function Login() {
           <div className="grid grid-cols-2 gap-3">
 
             <div className="border-2 border-blue-600 bg-blue-50 rounded-xl p-4 text-center">
-              <div className="text-3xl mb-2 flex justify-center text-blue-600"><FaGraduationCap /></div>
+              <div className="text-3xl mb-2 flex justify-center text-blue-600">
+                <FaGraduationCap />
+              </div>
+
               <p className="font-bold text-blue-700">
                 Student
               </p>
+
               <p className="text-xs text-blue-600 mt-1">
                 Student Login
               </p>
@@ -105,10 +120,14 @@ function Login() {
               to="/admin-login"
               className="border-2 border-slate-200 rounded-xl p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition"
             >
-              <div className="text-3xl mb-2 flex justify-center text-slate-600"><FaUserShield /></div>
+              <div className="text-3xl mb-2 flex justify-center text-slate-600">
+                <FaUserShield />
+              </div>
+
               <p className="font-bold text-slate-700">
                 Admin
               </p>
+
               <p className="text-xs text-slate-500 mt-1">
                 Admin Login
               </p>
@@ -165,7 +184,13 @@ function Login() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3.5 rounded-xl mt-7 hover:bg-blue-700 transition font-bold shadow-lg shadow-blue-600/20 disabled:opacity-50"
           >
-            {loading ? "Logging in..." : <span className="inline-flex items-center gap-2">Login as Student <FaArrowRight /></span>}
+            {loading ? (
+              "Logging in..."
+            ) : (
+              <span className="inline-flex items-center gap-2">
+                Login as Student <FaArrowRight />
+              </span>
+            )}
           </button>
 
         </form>
@@ -173,14 +198,16 @@ function Login() {
         {/* Registration Link */}
         <div className="text-center text-slate-500 mt-7">
           <p>
-            Don't have a student account?{" "}
+            Don't have a student account?
           </p>
 
           <Link
             to="/register"
             className="inline-block mt-2 text-blue-600 font-bold hover:underline"
           >
-            <span className="inline-flex items-center gap-2">Register as Student <FaArrowRight /></span>
+            <span className="inline-flex items-center gap-2">
+              Register as Student <FaArrowRight />
+            </span>
           </Link>
         </div>
 
@@ -189,7 +216,9 @@ function Login() {
             to="/"
             className="text-sm text-slate-400 hover:text-blue-600 transition"
           >
-            <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Home</span>
+            <span className="inline-flex items-center gap-2">
+              <FaArrowLeft /> Back to Home
+            </span>
           </Link>
         </div>
 
