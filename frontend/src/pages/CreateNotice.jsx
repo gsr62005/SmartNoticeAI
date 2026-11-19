@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaMagic } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function CreateNotice() {
   const navigate = useNavigate();
@@ -38,13 +39,15 @@ function CreateNotice() {
     setMessage("");
 
     try {
+      const token = sessionStorage.getItem("adminToken");
+
       const response = await fetch(
-        "http://localhost:5000/api/ai/summarize",
+        `${API_BASE_URL}/api/ai/summarize`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             title: formData.title,
@@ -56,7 +59,9 @@ function CreateNotice() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "AI summary generation failed");
+        throw new Error(
+          data.message || "AI summary generation failed"
+        );
       }
 
       setFormData((prev) => ({
@@ -68,6 +73,7 @@ function CreateNotice() {
       setMessageType("success");
 
     } catch (error) {
+      console.error("AI Summary Error:", error);
       setMessage(error.message || "AI generation failed");
       setMessageType("error");
     } finally {
@@ -87,13 +93,15 @@ function CreateNotice() {
     setMessage("");
 
     try {
+      const token = sessionStorage.getItem("adminToken");
+
       const response = await fetch(
-        "http://localhost:5000/api/ai/classify-priority",
+        `${API_BASE_URL}/api/ai/classify-priority`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             title: formData.title,
@@ -105,7 +113,9 @@ function CreateNotice() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Priority detection failed");
+        throw new Error(
+          data.message || "Priority detection failed"
+        );
       }
 
       setFormData((prev) => ({
@@ -117,6 +127,7 @@ function CreateNotice() {
       setMessageType("success");
 
     } catch (error) {
+      console.error("AI Priority Error:", error);
       setMessage(error.message || "AI priority detection failed");
       setMessageType("error");
     } finally {
@@ -132,13 +143,15 @@ function CreateNotice() {
     setMessage("");
 
     try {
+      const token = sessionStorage.getItem("adminToken");
+
       const response = await fetch(
-        "http://localhost:5000/api/notices",
+        `${API_BASE_URL}/api/notices`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("adminToken")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         }
@@ -147,7 +160,9 @@ function CreateNotice() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create notice");
+        throw new Error(
+          data.message || "Failed to create notice"
+        );
       }
 
       setMessage("Notice published successfully!");
@@ -165,6 +180,7 @@ function CreateNotice() {
       }, 1500);
 
     } catch (error) {
+      console.error("Publish Notice Error:", error);
       setMessage(error.message || "Something went wrong");
       setMessageType("error");
     } finally {
@@ -180,7 +196,9 @@ function CreateNotice() {
           onClick={() => navigate("/admin")}
           className="text-blue-600 font-semibold mb-6"
         >
-          <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Admin Dashboard</span>
+          <span className="inline-flex items-center gap-2">
+            <FaArrowLeft /> Back to Admin Dashboard
+          </span>
         </button>
 
         <div className="bg-white p-8 rounded-xl shadow-sm">
@@ -264,7 +282,11 @@ function CreateNotice() {
               >
                 {priorityLoading
                   ? "Detecting Priority..."
-                  : <span className="inline-flex items-center gap-2"><FaMagic /> AI Detect Priority</span>}
+                  : (
+                    <span className="inline-flex items-center gap-2">
+                      <FaMagic /> AI Detect Priority
+                    </span>
+                  )}
               </button>
 
               <p className="text-sm text-gray-500 mt-2">
@@ -294,13 +316,18 @@ function CreateNotice() {
                 disabled={
                   aiLoading ||
                   priorityLoading ||
-                  !formData.summary.trim()
+                  !formData.summary.trim() ||
+                  !formData.title.trim()
                 }
                 className="mt-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-3 rounded-lg disabled:opacity-50"
               >
                 {aiLoading
                   ? "Generating AI Summary..."
-                  : <span className="inline-flex items-center gap-2"><FaMagic /> Generate AI Summary</span>}
+                  : (
+                    <span className="inline-flex items-center gap-2">
+                      <FaMagic /> Generate AI Summary
+                    </span>
+                  )}
               </button>
 
               <p className="text-sm text-gray-500 mt-2">
