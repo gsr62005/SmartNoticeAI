@@ -1,7 +1,25 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowRight, FaBell, FaChartLine, FaChevronDown, FaChevronUp, FaClipboardList, FaCog, FaExclamationCircle, FaHandPaper, FaHome, FaRegBookmark, FaRegStar, FaRobot, FaSearch, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaBell,
+  FaChartLine,
+  FaChevronDown,
+  FaChevronUp,
+  FaClipboardList,
+  FaCog,
+  FaExclamationCircle,
+  FaHandPaper,
+  FaHome,
+  FaRegBookmark,
+  FaRegStar,
+  FaRobot,
+  FaSearch,
+  FaSignOutAlt,
+} from "react-icons/fa";
+
+import API_BASE_URL from "../api";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -23,7 +41,7 @@ function Dashboard() {
     const fetchNotices = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/notices"
+          `${API_BASE_URL}/api/notices`
         );
 
         if (!response.ok) {
@@ -48,7 +66,7 @@ function Dashboard() {
     const fetchNotifications = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/notifications"
+          `${API_BASE_URL}/api/notifications`
         );
 
         if (!response.ok) {
@@ -183,28 +201,26 @@ function Dashboard() {
       {/* SIDEBAR */}
       <aside className="w-full lg:w-64 lg:min-h-screen bg-slate-950 text-white flex flex-col shrink-0">
 
-        
-{/* Clickable SmartNotice AI Branding */}
-<Link
-  to="/"
-  className="px-6 py-7 border-b border-white/10 flex items-center gap-3 group cursor-pointer"
-  title="Go to Home Page"
->
-  <div className="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-2xl shadow-lg shadow-blue-600/30 group-hover:scale-110 transition">
-    <FaRobot />
-  </div>
+        {/* Clickable SmartNotice AI Branding */}
+        <Link
+          to="/"
+          className="px-6 py-7 border-b border-white/10 flex items-center gap-3 group cursor-pointer"
+          title="Go to Home Page"
+        >
+          <div className="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-2xl shadow-lg shadow-blue-600/30 group-hover:scale-110 transition">
+            <FaRobot />
+          </div>
 
-  <div>
-    <h1 className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition">
-      SmartNotice AI
-    </h1>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition">
+              SmartNotice AI
+            </h1>
 
-    <p className="text-xs text-slate-400">
-      Intelligent Campus Portal
-    </p>
-  </div>
-</Link>
-
+            <p className="text-xs text-slate-400">
+              Intelligent Campus Portal
+            </p>
+          </div>
+        </Link>
 
         {/* Sidebar Menu */}
         <div className="px-5 pt-7">
@@ -385,7 +401,10 @@ function Dashboard() {
               </p>
 
               <h2 className="text-2xl sm:text-3xl font-bold mt-3">
-                <span className="inline-flex items-center gap-2">Welcome back, {studentName}! <FaHandPaper className="text-amber-300" /></span>
+                <span className="inline-flex items-center gap-2">
+                  Welcome back, {studentName}!{" "}
+                  <FaHandPaper className="text-amber-300" />
+                </span>
               </h2>
 
               <p className="text-blue-100 mt-3 leading-relaxed">
@@ -397,7 +416,9 @@ function Dashboard() {
                 onClick={() => handleNavigation("Notices")}
                 className="mt-6 bg-white text-blue-700 px-5 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition shadow-lg"
               >
-                <span className="inline-flex items-center gap-2">Explore Notices <FaArrowRight /></span>
+                <span className="inline-flex items-center gap-2">
+                  Explore Notices <FaArrowRight />
+                </span>
               </button>
 
             </div>
@@ -601,7 +622,9 @@ function Dashboard() {
                         to={`/notice/${notice._id}`}
                         className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition"
                       >
-                        <span className="inline-flex items-center gap-2">Read Details <FaArrowRight /></span>
+                        <span className="inline-flex items-center gap-2">
+                          Read Details <FaArrowRight />
+                        </span>
                       </Link>
 
                     </div>
@@ -614,7 +637,9 @@ function Dashboard() {
 
                 <div className="xl:col-span-2 bg-white border border-slate-200 rounded-2xl p-12 text-center">
 
-                  <div className="text-5xl mb-4 flex justify-center text-slate-400"><FaSearch /></div>
+                  <div className="text-5xl mb-4 flex justify-center text-slate-400">
+                    <FaSearch />
+                  </div>
 
                   <h4 className="text-lg font-bold text-slate-800">
                     No notices found
