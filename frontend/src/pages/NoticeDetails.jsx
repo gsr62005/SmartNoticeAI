@@ -3,7 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { FaArrowLeft, FaBookmark, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaBookmark,
+  FaCalendarAlt,
+  FaCheckCircle,
+} from "react-icons/fa";
+
+import API_BASE_URL from "../api";
 
 function NoticeDetails() {
   const { id } = useParams();
@@ -15,10 +22,13 @@ function NoticeDetails() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // Fetch Notice Details
   useEffect(() => {
     const fetchNotice = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/notices");
+        const response = await fetch(
+          `${API_BASE_URL}/api/notices`
+        );
 
         if (!response.ok) {
           throw new Error("Unable to fetch notices");
@@ -37,9 +47,10 @@ function NoticeDetails() {
 
         setNotice(foundNotice);
 
+        // Check Saved Status
         try {
           const savedResponse = await fetch(
-            "http://localhost:5000/api/saved"
+            `${API_BASE_URL}/api/saved`
           );
 
           if (savedResponse.ok) {
@@ -67,6 +78,7 @@ function NoticeDetails() {
     fetchNotice();
   }, [id]);
 
+  // Save / Remove Notice
   const handleSave = async () => {
     if (!notice || saving) return;
 
@@ -76,8 +88,8 @@ function NoticeDetails() {
     try {
       const response = await fetch(
         saved
-          ? `http://localhost:5000/api/saved/${notice._id}`
-          : "http://localhost:5000/api/saved",
+          ? `${API_BASE_URL}/api/saved/${notice._id}`
+          : `${API_BASE_URL}/api/saved`,
         {
           method: saved ? "DELETE" : "POST",
           headers: {
@@ -114,14 +126,18 @@ function NoticeDetails() {
     }
   };
 
+  // Loading Screen
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-gray-500 text-lg">Loading notice...</p>
+        <p className="text-gray-500 text-lg">
+          Loading notice...
+        </p>
       </div>
     );
   }
 
+  // Error Screen
   if (error || !notice) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -134,7 +150,9 @@ function NoticeDetails() {
             to="/dashboard"
             className="text-blue-600 mt-4 inline-block hover:underline"
           >
-            <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Dashboard</span>
+            <span className="inline-flex items-center gap-2">
+              <FaArrowLeft /> Back to Dashboard
+            </span>
           </Link>
         </div>
       </div>
@@ -144,14 +162,18 @@ function NoticeDetails() {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
+
         <Link
           to="/dashboard"
           className="text-blue-600 hover:underline"
         >
-          <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Dashboard</span>
+          <span className="inline-flex items-center gap-2">
+            <FaArrowLeft /> Back to Dashboard
+          </span>
         </Link>
 
         <div className="bg-white rounded-2xl shadow-md p-8 mt-6">
+
           <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
             {notice.category}
           </span>
@@ -175,7 +197,8 @@ function NoticeDetails() {
           </div>
 
           <p className="text-gray-500 mt-4">
-            <FaCalendarAlt className="inline mr-2 -mt-1" />Published:{" "}
+            <FaCalendarAlt className="inline mr-2 -mt-1" />
+            Published:{" "}
             {notice.date
               ? notice.date
               : notice.createdAt
@@ -236,6 +259,7 @@ function NoticeDetails() {
             </div>
           </div>
 
+          {/* Save Notice Button */}
           <button
             onClick={handleSave}
             disabled={saving}
@@ -248,8 +272,16 @@ function NoticeDetails() {
             {saving
               ? "Please wait..."
               : saved
-              ? <span className="inline-flex items-center gap-2"><FaCheckCircle /> Notice Saved</span>
-              : <span className="inline-flex items-center gap-2"><FaBookmark /> Save Notice</span>}
+              ? (
+                <span className="inline-flex items-center gap-2">
+                  <FaCheckCircle /> Notice Saved
+                </span>
+              )
+              : (
+                <span className="inline-flex items-center gap-2">
+                  <FaBookmark /> Save Notice
+                </span>
+              )}
           </button>
 
           {message && (
@@ -257,6 +289,7 @@ function NoticeDetails() {
               {message}
             </p>
           )}
+
         </div>
       </div>
     </div>
