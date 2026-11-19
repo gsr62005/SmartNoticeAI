@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaRobot } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function AdminRegister() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ function AdminRegister() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/admin/register",
+        `${API_BASE_URL}/api/admin/register`,
         {
           method: "POST",
           headers: {
@@ -61,7 +62,7 @@ function AdminRegister() {
             name: formData.name.trim(),
             email: formData.email.trim().toLowerCase(),
             password: formData.password,
-            registrationKey: formData.registrationKey,
+            registrationKey: formData.registrationKey.trim(),
           }),
         }
       );
@@ -79,7 +80,12 @@ function AdminRegister() {
       }, 1200);
 
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      console.error("Admin Registration Error:", err);
+
+      setError(
+        err.message || "Unable to connect to the server."
+      );
+
     } finally {
       setLoading(false);
     }
@@ -252,16 +258,21 @@ function AdminRegister() {
               to="/admin-login"
               className="inline-block mt-2 font-bold text-blue-600 hover:text-blue-800"
             >
-              <span className="inline-flex items-center gap-2">Login as Admin <FaArrowRight /></span>
+              <span className="inline-flex items-center gap-2">
+                Login as Admin <FaArrowRight />
+              </span>
             </Link>
           </div>
 
+          {/* Back Home */}
           <div className="text-center mt-5">
             <Link
               to="/"
               className="text-sm text-slate-400 hover:text-blue-600"
             >
-              <span className="inline-flex items-center gap-2"><FaArrowLeft /> Back to Home</span>
+              <span className="inline-flex items-center gap-2">
+                <FaArrowLeft /> Back to Home
+              </span>
             </Link>
           </div>
 
